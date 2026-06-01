@@ -1,0 +1,9 @@
+[variables]
+NODE_ENV = "production"
+PORT = "8080"
+
+[phases.build]
+cmds = ["npm ci", "npm run build"]
+
+[start]
+cmd = "node server.js"

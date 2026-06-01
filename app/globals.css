@@ -1,0 +1,53 @@
+@import "tailwindcss";
+
+:root {
+  --background: #080808;
+  --surface: #0d0d0d;
+  --surface-2: #111111;
+  --gold: #c9a84c;
+  --gold-hover: #d4b55f;
+  --border: rgba(255, 255, 255, 0.06);
+  --muted: #6b6b66;
+  --foreground: #ededed;
+  --blue: #3b82f6;
+  --blue-muted: #1d4ed8;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: system-ui, -apple-system, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+code, .font-mono {
+  font-family: 'JetBrains Mono', 'Fira Code', monospace;
+}
+
+/* Grid background */
+.grid-bg {
+  background-image:
+    linear-gradient(#141414 1px, transparent 1px),
+    linear-gradient(90deg, #141414 1px, transparent 1px);
+  background-size: 48px 48px;
+}
+
+/* Gold accent utilities */
+.text-gold { color: var(--gold); }
+.bg-gold { background: var(--gold); }
+.border-gold { border-color: var(--gold); }
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--surface); }
+::-webkit-scrollbar-thumb { background: #2a2a2a; border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--gold); }
