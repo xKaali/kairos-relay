@@ -18,10 +18,15 @@
   --color-foreground: var(--foreground);
 }
 
-* {
-  box-sizing: border-box;
+html, body {
   margin: 0;
   padding: 0;
+  background: #080808;
+  min-height: 100%;
+}
+
+* {
+  box-sizing: border-box;
 }
 
 body {
