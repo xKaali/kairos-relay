@@ -1,9 +1,12 @@
 import type { NextConfig } from 'next'
+import path from 'path'
 
 const nextConfig: NextConfig = {
-  // Required for Railway — listens on 8080
-  // Railway sets PORT env var automatically
   output: 'standalone',
+  // Ensure images from public/ are allowed
+  images: {
+    unoptimized: true,
+  },
 }
 
 export default nextConfig
