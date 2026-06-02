@@ -1,16 +1,28 @@
-import { createClient } from '@supabase/supabase-js'
+import { createClient, SupabaseClient } from '@supabase/supabase-js'
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!
+// Anon client — safe to initialize with empty strings at build time
+export const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL ?? 'https://placeholder.supabase.co',
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ?? 'placeholder'
+)
 
-// Anon client — respects RLS (used for public reads)
-export const supabase = createClient(supabaseUrl, supabaseAnonKey)
+// Admin client — lazily initialized at runtime only
+let _admin: SupabaseClient | null = null
 
-// Admin client — bypasses RLS (used for all server-side writes)
-export const supabaseAdmin = createClient(supabaseUrl, supabaseServiceKey, {
-  auth: {
-    autoRefreshToken: false,
-    persistSession: false,
-  },
-})
+export const supabaseAdmin: SupabaseClient = new Proxy(
+  {} as SupabaseClient,
+  {
+    get(_target, prop: string | symbol) {
+      if (!_admin) {
+        const url = process.env.NEXT_PUBLIC_SUPABASE_URL
+        const key = process.env.SUPABASE_SERVICE_ROLE_KEY
+        if (!url || !key) throw new Error('Supabase env vars not set')
+        _admin = createClient(url, key, {
+          auth: { autoRefreshToken: false, persistSession: false },
+        })
+      }
+      const value = (_admin as unknown as Record<string | symbol, unknown>)[prop]
+      return typeof value === 'function' ? value.bind(_admin) : value
+    },
+  }
+)
